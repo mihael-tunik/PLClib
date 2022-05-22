@@ -20,7 +20,7 @@ def test(grid_dict, g_func):
 
 if __name__ == "__main__":    
     #grid_dict = {'Nxy': 300, 'Nz': 200, 'x_min': 0.0, 'x_max': 1.0, 'y_min': 0.0, 'y_max': 1.0, 'z_min': 0.0, 'z_max': 1.0}
-    grid_dict = {'Nxy': 1000, 'Nz': 3000, 'x_min': -1.0, 'x_max': 1.0, 'y_min': -1.0, 'y_max': 1.0, 'z_min': -1.0, 'z_max': 1.0}
+    grid_dict = {'Nxy': 500, 'Nz': 500, 'x_min': -1.0, 'x_max': 1.0, 'y_min': -1.0, 'y_max': 1.0, 'z_min': -1.0, 'z_max': 1.0}
     
     x = np.linspace(grid_dict['x_min'], grid_dict['x_max'], grid_dict['Nxy'])
     y = np.linspace(grid_dict['y_min'], grid_dict['y_max'], grid_dict['Nxy'])

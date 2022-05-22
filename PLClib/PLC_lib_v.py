@@ -2,6 +2,8 @@ import numpy as np
 import ctypes
 import os
 
+from typing import Callable, Dict
+
 class GridDesc(ctypes.Structure):
     _fields_ = [
         ("Nxy", ctypes.c_int), 
@@ -22,7 +24,7 @@ def decorate(f):
     return f_ctypes_wrapper
     
 
-def integer_labeling_v(f, grid_dict):
+def integer_labeling_v(f: Callable[[int, float], type(np.ndarray)], grid_dict: Dict):
     
     buffer_size = 200000
     # create some memory buffers for return
