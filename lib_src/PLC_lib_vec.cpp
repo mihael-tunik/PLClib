@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <vector>
 
+#define COMPLETELY_LABELED(x) ((x) == 0x7)
+
 using namespace std;
 
 typedef struct 
@@ -27,8 +29,9 @@ typedef struct
 }d_pair;
 
 int label_fast(d_pair f_val){ 
+    int map[] = {1, 2, 2, 4};
     int r = ((f_val.data[1] >= 0.0) << 1) | (f_val.data[0] >= 0.0);        
-    return (r & 1) << (r >> 1); //3->2, 2->0, 1->1, 0->0
+    return map[r];
 }
 
 double *f_wrapped_vec(int N, double z, void (*ptr)(int, double, double *), double *slice_data_ptr){
@@ -42,7 +45,7 @@ void label_fast_vec(double *slice_data, char *cache, int size){
     for(int l = 0; l < NN; ++l){
         d_pair f_val;       
         f_val.data[0] = slice_data[l], f_val.data[1] = slice_data[NN+l]; 
-        cache[l] = (1 << label_fast(f_val));
+        cache[l] = label_fast(f_val);
     }
     
 }
@@ -78,7 +81,6 @@ extern "C" int integer_labeling_3d_vec(grid_t GridDesc, void (*ptr)(int, double,
     for(int i = 0; i < Nz; ++i){
         z[i] = GridDesc.z_min + (GridDesc.z_max - GridDesc.z_min)*i/(Nz-1);
     }
-    
         
     label_fast_vec(f_wrapped_vec(N, z[0], ptr, slice_data_ptr), cache_prev, N);
        
@@ -95,10 +97,9 @@ extern "C" int integer_labeling_3d_vec(grid_t GridDesc, void (*ptr)(int, double,
                 iter_cnt++;
  
                 if(iter_cnt % 100000 == 0)
-                    cout << iter_cnt << " cubes checked from " << grid_size << endl;
-                
+                    cout << iter_cnt << " cubes checked from " << grid_size << endl;                
             
-                if(label_flags == 0x7){
+                if(COMPLETELY_LABELED(label_flags)){
                     result[3*cnt    ] = x[(l - 1) / N];
                     result[3*cnt + 1] = y[(l - 1) % N];
                     result[3*cnt + 2] = z[k];
@@ -115,7 +116,7 @@ extern "C" int integer_labeling_3d_vec(grid_t GridDesc, void (*ptr)(int, double,
     
     *size = cnt * 3;
     
-    cout << cnt << "  starting cubes found, " << grid_size << " checked!" << endl;
+    cout << cnt << "  completely labeled cubes found, " << grid_size << " checked!" << endl;
     
     delete[] cache_prev;
     delete[] cache_next;
