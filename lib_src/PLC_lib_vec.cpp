@@ -29,7 +29,7 @@ typedef struct
 }d_pair;
 
 int label_fast(d_pair f_val){ 
-    int map[] = {1, 2, 2, 4};
+    int map[] = {1, 1, 2, 4};
     int r = ((f_val.data[1] >= 0.0) << 1) | (f_val.data[0] >= 0.0);        
     return map[r];
 }
